@@ -1,8 +1,8 @@
 return {
     mod_name = {
-        en = "SilentRev",
+        en = "Silent Revving for Chain Weapons",
     },
     mod_description = {
-        en = "",
+        en = "Removes the sound for revving up a chain weapon",
     },
 }
