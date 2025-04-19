@@ -28,24 +28,24 @@ mod.on_all_mods_loaded = function()
         }
         -- Replacing sound with silence
         for _, weapon_name in ipairs(chain_weapons) do
-            PlayerCharacterSoundEventAliases["sfx_weapon_up"]["events"][weapon_name] = "wwise/events/weapon/play_weapon_silence" 
+            PlayerCharacterSoundEventAliases.sfx_weapon_up.events[weapon_name] = "wwise/events/weapon/play_weapon_silence" 
         end
     end
     -- Unrev purr
     if mod:get("disable_rev_down") then 
         -- Replacing sound with silence
-        PlayerCharacterSoundEventAliases["weapon_special_end"]["events"]["chainaxe_p1_m1"] = "wwise/events/weapon/play_weapon_silence" 
-        PlayerCharacterSoundEventAliases["weapon_special_end"]["events"]["chainaxe_p1_m2"] = "wwise/events/weapon/play_weapon_silence" 
+        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_weapon_silence" 
+        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_weapon_silence" 
     end
 
-    if mod:get("disable_rev_idle") then
+    --if mod:get("disable_rev_idle") then
         --mod:hook_safe(ChainWeaponEffects, "init", function (self, context, slot, weapon_template, fx_sources)
         --    -- Replacing active sound with regular idle sound
         --    local special_active_fx_source_name = fx_sources._melee_idling
         --    self._special_active_fx_source_name = melee_idling_fx_source_name
         --end)
-        mod:hook_safe(ChainWeaponEffects, "_start_vfx_loop", function (self)
-            return
-        end)
-    end
+        --mod:hook_safe(ChainWeaponEffects, "_start_vfx_loop", function (self)
+        --    return
+        --end)
+    --end
 end
