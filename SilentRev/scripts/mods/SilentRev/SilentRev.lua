@@ -10,7 +10,7 @@ local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_
 --#################################
 -- Hooks
 --#################################
-local function replace_sounds()
+local function replace_sounds(settings_changed)
     local debug = mod:get("enable_debug_mode")
 
     -- Rev up VRRRRRRRRRRRRRR
@@ -28,6 +28,14 @@ local function replace_sounds()
         for _, weapon_name in ipairs(chain_weapons) do
             PlayerCharacterSoundEventAliases.sfx_weapon_up.events[weapon_name] = "wwise/events/weapon/play_weapon_silence" 
         end
+    -- If not disabled and settings just got changed, put them back
+    elseif settings_changed then
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_2h_p1_m1"] = "wwise/events/weapon/play_2h_chainsword_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_2h_p1_m2"] = "wwise/events/weapon/play_2h_chainsword_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m1"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m2"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
     end
     -- Unrev purr
     if mod:get("disable_rev_down") then 
@@ -51,9 +59,9 @@ end
 
 mod.on_all_mods_loaded = function()
     mod:info("SilentRev v" .. mod.version .. " loaded uwu nya :3")
-    replace_sounds()
+    replace_sounds(false)
 end
 
 mod.on_setting_changed = function()
-    replace_sounds()
+    replace_sounds(true)
 end
