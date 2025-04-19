@@ -1,36 +1,44 @@
 local mod = get_mod("SilentRev")
 
 local finalWidgets = {
-    {
-        setting_id = "enable_debug_mode",
-		type = "checkbox",
-		default_value = false,
-    },
-    {
-        setting_id = "disable_sounds",
-        type = "group",
-        sub_widgets = {},
-    },
 }
 
-local widgetsToggleableToAdd = {"disable_rev_up", "disable_rev_idle", "disable_rev_down" }
+
 -- Appends a toggleable option for a new widget
 local function addWidget(name)
     -- Write at (table size) + 1, ie inserting at the tail
     finalWidgets[#finalWidgets + 1] = {
         setting_id = name,
         type = "checkbox",
-        default_value = true,
+        default_value = false,
     }
 end
 
--- Adds a sub widget for each one in the list of names
+local widgetsToggleableToAdd = {"enable_debug_mod", "use_audio"}
 for _, name in pairs(widgetsToggleableToAdd) do
-    local disable_sounds_group_subwidgets = finalWidgets[2]["sub_widgets"]
+    addWidget(name)
+end
+
+-- creates group with empty subwidgets
+local index_for_disable_group = #finalWidgets+1
+finalWidgets[index_for_disable_group] = {
+    setting_id = "disable_sounds",
+    type = "group",
+    sub_widgets = {},
+}
+-- fill up the subwidgets
+local subwidgetsToggleableToAdd = {"disable_rev_up", "disable_rev_idle", "disable_rev_down" }
+for _, name in pairs(subwidgetsToggleableToAdd) do
+    local disable_sounds_group_subwidgets = finalWidgets[index_for_disable_group]["sub_widgets"]
     disable_sounds_group_subwidgets[#disable_sounds_group_subwidgets+1] = {
         setting_id = name,
-        type = "checkbox",
-        default_value = true,
+        type = "dropdown",
+        default_value = "silenced",
+        options = {
+            {text = name.."_option_1", value = "not_disabled"},
+            {text = name.."_option_2", value = "silenced"},
+            {text = name.."_option_3", value = "audio_plugin"},
+        },
     }
 end
 

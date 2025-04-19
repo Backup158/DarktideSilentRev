@@ -22,6 +22,21 @@ local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_
 -- -------------
 local function replace_sounds(settings_changed)
     local debug = mod:get("enable_debug_mode")
+    use_audio = mod:get("use_audio")
+    if use_audio then
+        Audio = get_mod("Audio")
+        if not Audio then
+            mod:error("Audio plugin is required for this option!")
+            return
+        end
+    end
+
+    if debug then
+        mod:echo("Audio plugin option: "..tostring(use_audio))
+        mod:echo("Disable rev up option: "..tostring(mod:get("disable_rev_up")))
+        mod:echo("Disable rev idle option: "..tostring(mod:get("disable_rev_idle")))
+        mod:echo("Disable rev down option: "..tostring(mod:get("disable_rev_down")))
+    end
 
     -- Rev up VRRRRRRRRRRRRRR
     if mod:get("disable_rev_up") then
@@ -59,7 +74,7 @@ local function replace_sounds(settings_changed)
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_rev"
     end
 
-    --if mod:get("disable_rev_idle") then
+    if mod:get("disable_rev_idle") then
         --mod:hook_safe(ChainWeaponEffects, "init", function (self, context, slot, weapon_template, fx_sources)
         --    -- Replacing active sound with regular idle sound
         --    local special_active_fx_source_name = fx_sources._melee_idling
@@ -68,7 +83,9 @@ local function replace_sounds(settings_changed)
         --mod:hook_safe(ChainWeaponEffects, "_start_vfx_loop", function (self)
         --    return
         --end)
-    --end
+        --PlayerCharacterSoundEventAliases.looping_events.equipped_item_passive.events["chainaxe_p1_m1"] = "wwise/events/weapon/%s_weapon_silence" 
+        -- "wwise/events/weapon/%s_chainaxe",
+    end
 
 end
 
