@@ -10,6 +10,16 @@ local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_
 --#################################
 -- Hooks
 --#################################
+
+-- -------------
+-- Replace Sounds
+-- -------------
+-- Paramater(s):
+--      bool: settings_changed
+--          indicates if we're calling this from on_settings_changed
+-- Description: Replaces sounds in the player sound events tables
+-- Return: N/A
+-- -------------
 local function replace_sounds(settings_changed)
     local debug = mod:get("enable_debug_mode")
 
@@ -28,7 +38,7 @@ local function replace_sounds(settings_changed)
         for _, weapon_name in ipairs(chain_weapons) do
             PlayerCharacterSoundEventAliases.sfx_weapon_up.events[weapon_name] = "wwise/events/weapon/play_weapon_silence" 
         end
-    -- If not disabled and settings just got changed, put them back
+    --  If not disabled and settings just got changed, put them back
     elseif settings_changed then
         PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_special_start"
         PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_special_start"
@@ -37,11 +47,16 @@ local function replace_sounds(settings_changed)
         PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m1"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
         PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m2"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
     end
+
     -- Unrev purr
     if mod:get("disable_rev_down") then 
         -- Replacing sound with silence
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_weapon_silence" 
-        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_weapon_silence" 
+        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_weapon_silence"
+    --  If not disabled and settings just got changed, put them back
+    elseif settings_changed then
+        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_rev"
+        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_rev"
     end
 
     --if mod:get("disable_rev_idle") then
@@ -57,11 +72,11 @@ local function replace_sounds(settings_changed)
 
 end
 
+-- Calls replacer at appropriate times
 mod.on_all_mods_loaded = function()
-    mod:info("SilentRev v" .. mod.version .. " loaded uwu nya :3")
+    mod:info("SilentRev v"..mod.version.." loaded uwu nya :3")
     replace_sounds(false)
 end
-
 mod.on_setting_changed = function()
     replace_sounds(true)
 end
