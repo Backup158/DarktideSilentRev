@@ -6,7 +6,13 @@ local finalWidgets = {
 		type = "checkbox",
 		default_value = false,
     },
+    {
+        setting_id = "disable_sounds",
+        type = "group",
+        sub_widgets = {},
+    },
 }
+
 local widgetsToggleableToAdd = {"disable_rev_up", "disable_rev_idle", "disable_rev_down" }
 -- Appends a toggleable option for a new widget
 local function addWidget(name)
@@ -17,9 +23,15 @@ local function addWidget(name)
         default_value = true,
     }
 end
--- Adds a widget for each one in the list of names
+
+-- Adds a sub widget for each one in the list of names
 for _, name in pairs(widgetsToggleableToAdd) do
-    addWidget(name)
+    local disable_sounds_group_subwidgets = finalWidgets[2]["sub_widgets"]
+    disable_sounds_group_subwidgets[#disable_sounds_group_subwidgets+1] = {
+        setting_id = name,
+        type = "checkbox",
+        default_value = true,
+    }
 end
 
 return {

@@ -10,9 +10,7 @@ local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_
 --#################################
 -- Hooks
 --#################################
-mod.on_all_mods_loaded = function()
-    mod:info("SilentRev v" .. mod.version .. " loaded uwu nya :3")
-    
+local function replace_sounds()
     local debug = mod:get("enable_debug_mode")
 
     -- Rev up VRRRRRRRRRRRRRR
@@ -48,4 +46,14 @@ mod.on_all_mods_loaded = function()
         --    return
         --end)
     --end
+
+end
+
+mod.on_all_mods_loaded = function()
+    mod:info("SilentRev v" .. mod.version .. " loaded uwu nya :3")
+    replace_sounds()
+end
+
+mod.on_setting_changed = function()
+    replace_sounds()
 end
