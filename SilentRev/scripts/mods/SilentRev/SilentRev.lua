@@ -12,13 +12,10 @@ local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_
 --#################################
 mod.on_all_mods_loaded = function()
     mod:info("SilentRev v" .. mod.version .. " loaded uwu nya :3")
-    --
+    
     local debug = mod:get("enable_debug_mode")
-    local disable_rev_up = mod:get("disable_rev_up")
-    local disable_rev_idle = mod:get("disable_rev_up")
-    local disable_rev_down = mod:get("disable_rev_down")
 
-    if disable_rev_up  then
+    if mod:get("disable_rev_up") then
         -- Table of chain weapons to iterate through
         local chain_weapons = {
             "chainaxe_p1_m1",
@@ -35,12 +32,13 @@ mod.on_all_mods_loaded = function()
         end
     end
     -- Unrev purr
-    if disable_rev_down then 
+    if mod:get("disable_rev_down") then 
+        -- Replacing sound with silence
         PlayerCharacterSoundEventAliases["weapon_special_end"]["events"]["chainaxe_p1_m1"] = "wwise/events/weapon/play_weapon_silence" 
         PlayerCharacterSoundEventAliases["weapon_special_end"]["events"]["chainaxe_p1_m2"] = "wwise/events/weapon/play_weapon_silence" 
     end
 
-    if disable_rev_idle then
+    if mod:get("disable_rev_idle") then
         mod:hook_safe(ChainWeaponEffects, "init", function (self, context, slot, weapon_template, fx_sources)
             local special_active_fx_source_name = fx_sources._melee_idling
             self._special_active_fx_source_name = melee_idling_fx_source_name
