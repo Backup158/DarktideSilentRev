@@ -27,8 +27,4 @@ mod.on_all_mods_loaded = function()
         -- Rev up
         PlayerCharacterSoundEventAliases["sfx_weapon_up"]["events"][weapon_name] = "wwise/events/weapon/play_weapon_silence"
     end
-
-    mod:hook_safe(ChainWeaponEffects, "init", function (self, context, slot, weapon_template, fx_sources)
-        local special_active_fx_source_name = fx_sources._melee_idling
-    end)
 end
