@@ -8,13 +8,12 @@ local ChainWeaponEffects = require("scripts/extension_systems/visual_loadout/wie
 local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_character_sound_event_aliases")
 
 --#################################
--- Hooks
+-- Helper Functions
 --#################################
-
 -- -------------
 -- Replace Sounds
 -- -------------
--- Paramater(s):
+-- Parameter(s):
 --      bool: settings_changed
 --          indicates if we're calling this from on_settings_changed
 -- Description: Replaces sounds in the player sound events tables
@@ -143,7 +142,9 @@ local function replace_sounds(settings_changed)
 
 end
 
--- Calls replacer at appropriate times
+--#################################
+-- Hooks
+--#################################
 mod.on_all_mods_loaded = function()
     mod:info("SilentRev v"..mod.version.." loaded uwu nya :3")
     replace_sounds(false)

@@ -1,8 +1,6 @@
 local mod = get_mod("SilentRev")
 
-local finalWidgets = {
-}
-
+local finalWidgets = {}
 
 -- Appends a toggleable option for a new widget
 local function addWidget(name)
@@ -14,7 +12,7 @@ local function addWidget(name)
     }
 end
 
-local widgetsToggleableToAdd = {"enable_debug_mod", "use_audio"}
+local widgetsToggleableToAdd = {"enable_debug_mode", "use_audio"}
 for _, name in pairs(widgetsToggleableToAdd) do
     addWidget(name)
 end
