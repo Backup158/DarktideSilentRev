@@ -29,13 +29,14 @@ localizations = {
 -- Parameter(s):
 --      string: setting_id
 --      string: localized name (English)
--- Description: Replaces sounds in the player sound events tables
+-- Description: Writes options in the localizations table for each sound that can be disabled, along with its 3 options
 -- Return: N/A
 -- -------------
 local function generateLocalizationsForSubwidgetOptions(setting_id, localized_name) 
     localizations[setting_id] = {en = localized_name}
     localizations[setting_id.."_option_1"] = {en = "Not Disabled"}
-    localizations[setting_id.."_option_2"] = {en = "Silenced"}
+    -- Add translations like this!                          ----v
+    localizations[setting_id.."_option_2"] = {en = "Silenced", ru = "Глубокая глотка"} 
     localizations[setting_id.."_option_3"] = {en = "Random Custom Audio"}
 end
 generateLocalizationsForSubwidgetOptions("disable_rev_up", "Rev up (Special Action activation)")
