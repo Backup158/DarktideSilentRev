@@ -21,27 +21,26 @@ localizations = {
     disable_sounds = {
         en = "Sounds to Disable",
     },
-    disable_rev_up = {
-        en = "Rev up (Special Action activation)",
-    },
-    disable_rev_idle = {
-        en = "Rev idle [NOT WORKING]",
-    },
-    disable_rev_down = {
-        en = "Rev down (Special Action deactivation)",
-    },
 }
 
-for _, name in ipairs({"disable_rev_up", "disable_rev_idle", "disable_rev_down" }) do
-    localizations[#localizations+1][name.."_option_1"] = {
-        en = "Not Disabled"
-    }
-    localizations[#localizations+1][name.."_option_2"] = {
-        en = "Silenced"
-    }
-    localizations[#localizations+1][name.."_option_3"] = {
-        en = "Random Custom Audio"
-    }
+-- -------------
+-- Generate Localizations for Subwidget Options
+-- -------------
+-- Parameter(s):
+--      string: setting_id
+--      string: localized name (English)
+-- Description: Replaces sounds in the player sound events tables
+-- Return: N/A
+-- -------------
+local function generateLocalizationsForSubwidgetOptions(setting_id, localized_name) 
+    localizations[setting_id] = {en = localized_name}
+    localizations[setting_id.."_option_1"] = {en = "Not Disabled"}
+    localizations[setting_id.."_option_2"] = {en = "Silenced"}
+    localizations[setting_id.."_option_3"] = {en = "Random Custom Audio"}
 end
+generateLocalizationsForSubwidgetOptions("disable_rev_up", "Rev up (Special Action activation)")
+generateLocalizationsForSubwidgetOptions("disable_rev_idle", "Rev idle [NOT WORKING]")
+generateLocalizationsForSubwidgetOptions("disable_rev_down", "Rev down (Special Action deactivation)")
+
 
 return localizations
