@@ -1,5 +1,5 @@
 local mod = get_mod("SilentRev")
-mod.version = "1.0"
+mod.version = "1.1"
 
 --#################################
 -- Requirements
@@ -22,13 +22,19 @@ local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_
 -- -------------
 local function replace_sounds(settings_changed)
     local debug = mod:get("enable_debug_mode")
-    use_audio = mod:get("use_audio")
+    local use_audio = mod:get("use_audio")
+    local audio_files
+    local option_disable_rev_up = mod:get("disable_rev_up")
+    local option_disable_rev_idle = mod:get("disable_rev_audio")
+    local option_disable_rev_down = mod:get("disable_rev_down")
+
     if use_audio then
         Audio = get_mod("Audio")
         if not Audio then
             mod:error("Audio plugin is required for this option!")
             return
         end
+        audio_files = Audio.new_files_handler()
     end
 
     if debug then
@@ -39,7 +45,8 @@ local function replace_sounds(settings_changed)
     end
 
     -- Rev up VRRRRRRRRRRRRRR
-    if mod:get("disable_rev_up") then
+    --  Silenced
+    if option_disable_rev_up == "silenced" then
         -- Table of chain weapons to iterate through
         local chain_weapons = {
             "chainaxe_p1_m1",
@@ -62,19 +69,44 @@ local function replace_sounds(settings_changed)
         PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m1"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
         PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m2"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
     end
+    if option_disable_rev_up == "audio_plugin" then
+        -- do audio plugin shit
+        Audio.hook_sound("play_chainaxe_special_start", function()
+            Audio.play_file(audio_files:random("revup"), { audio_type = "sfx" })
+            return false
+        end)
+        Audio.hook_sound("play_2h_chainsword_special_start", function()
+            Audio.play_file(audio_files:random("revup"), { audio_type = "sfx" })
+            return false
+        end)
+        Audio.hook_sound("play_combat_weapon_chainsword_special_start", function()
+            Audio.play_file(audio_files:random("revup"), { audio_type = "sfx" })
+            return false
+        end)
+    end
 
     -- Unrev purr
-    if mod:get("disable_rev_down") then 
+    if option_disable_rev_down == "silenced" then 
         -- Replacing sound with silence
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_weapon_silence" 
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_weapon_silence"
-    --  If not disabled and settings just got changed, put them back
+    --  If not silenced and settings just got changed, put them back
     elseif settings_changed then
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_rev"
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_rev"
     end
+    if option_disable_rev_down == "audio_plugin" then
+        Audio.hook_sound("play_chainaxe_rev", function()
+            Audio.play_file(audio_files:random("revdown"), { audio_type = "sfx" })
+            return false
+        end)
+    end
 
-    if mod:get("disable_rev_idle") then
+    -- Idle purr
+    --  Why does this require the Audio plugin?
+    --  The idle sound is also in PlayerCharacterSoundEventAliases, but in the looping_events table. The events table is the one that is returned, so that's the only one we can access.
+    --  
+    if use_audio and option_disable_rev_idle == "silenced" then
         --mod:hook_safe(ChainWeaponEffects, "init", function (self, context, slot, weapon_template, fx_sources)
         --    -- Replacing active sound with regular idle sound
         --    local special_active_fx_source_name = fx_sources._melee_idling
@@ -85,6 +117,28 @@ local function replace_sounds(settings_changed)
         --end)
         --PlayerCharacterSoundEventAliases.looping_events.equipped_item_passive.events["chainaxe_p1_m1"] = "wwise/events/weapon/%s_weapon_silence" 
         -- "wwise/events/weapon/%s_chainaxe",
+        Audio.hook_sound("wwise/events/weapon/%s_chainaxe", function()
+            return false
+        end)
+        Audio.hook_sound("wwise/events/weapon/%s_2h_chainsword", function()
+            return false
+        end)
+        Audio.hook_sound("wwise/events/weapon/%s_2h_chainsword", function()
+            return false
+        end)
+        --Audio.hook_sound("play_weapon_silence", function()
+        --    return false
+        --end)
+        --Audio.hook_sound("combat_chainsword_throttle", function()
+        --    return false
+        --end)
+        --Audio.hook_sound("combat_chainsword_cut", function()
+        --    return false
+        --end)
+    elseif option_disable_rev_idle == "not_disabled" and settings_changed then
+        -- diasble shit
+    elseif option_disable_rev_idle == "audio_plugin" then
+        -- do audio plugin shit
     end
 
 end
