@@ -67,14 +67,16 @@ local function replace_sounds(settings_changed)
         -- Replacing sound with silence
         for _, weapon_name in ipairs(chain_weapons) do
             PlayerCharacterSoundEventAliases.sfx_weapon_up.events[weapon_name] = "wwise/events/weapon/play_weapon_silence" 
+            -- Screaming test to make it obvious I replaced something
+            --PlayerCharacterSoundEventAliases.sfx_weapon_up.events[weapon_name] = "wwise/events/player/play_veteran_female_c__vce_scream_long" 
         end
     elseif option_disable_rev_up == "audio_plugin" then
         if not use_audio then
             mod:error("Audio plugin is required for this setting! (Rev up)")
             return
         end
-        
-        Audio.hook_sound("play_*_special_start", function()
+        -- In lua, ? and * are . and .*, respectively
+        Audio.hook_sound("play_.*_special_start", function()
             Audio.play_file(audio_files:random("revup"), { audio_type = "sfx" })
             return false
         end)
@@ -118,19 +120,22 @@ local function replace_sounds(settings_changed)
         --    local special_active_fx_source_name = fx_sources._melee_idling
         --    self._special_active_fx_source_name = melee_idling_fx_source_name
         --end)
+
         -- Just prevent the vfx from working in the first place
+        --  nope lol
         --mod:hook_origin(ChainWeaponEffects, "_start_vfx_loop", function (self)
         --    return
         --end)
+
+        -- this table is immutable through currently known methods
         --PlayerCharacterSoundEventAliases.looping_events.equipped_item_passive.events["chainaxe_p1_m1"] = "wwise/events/weapon/%s_weapon_silence" 
-        -- "wwise/events/weapon/%s_chainaxe",
-        Audio.silence_sounds(
-            {
-                "wwise/events/weapon/%s_chainaxe", 
-                "wwise/events/weapon/%s_2h_chainsword",
-                "wwise/events/weapon/%s_combat_weapon_chainsword",
-            } 
-        )
+
+        --Audio.silence_sounds({
+        --    "wwise/events/weapon/%s_chainaxe", 
+        --    "wwise/events/weapon/%s_2h_chainsword",
+        --    "wwise/events/weapon/%s_combat_weapon_chainsword",
+        --})
+
         --Audio.hook_sound("play_weapon_silence", function()
         --    return false
         --end)
@@ -142,6 +147,7 @@ local function replace_sounds(settings_changed)
         --end)
     elseif option_disable_rev_idle == "audio_plugin" then
         -- do audio plugin shit
+        -- wont regex chain because there's psyker chain lightning
         Audio.hook_sound("wwise/events/weapon/%s_chainaxe", function()
             Audio.play_file(audio_files:random("revidle"), { audio_type = "sfx" })
             return false
@@ -155,7 +161,6 @@ local function replace_sounds(settings_changed)
             return false
         end)
     end
-
 end
 
 --#################################
