@@ -6,6 +6,7 @@ mod.version = "1.1"
 --#################################
 local ChainWeaponEffects = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects")
 local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_character_sound_event_aliases")
+local PlayerCharacterLoopingSoundEventAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 
 --#################################
 -- Helper Functions
@@ -121,8 +122,18 @@ local function replace_sounds(settings_changed)
         --    self._special_active_fx_source_name = melee_idling_fx_source_name
         --end)
 
+        --mod:hook_safe(ChainWeaponEffects, "init", function (self, context, slot, weapon_template, fx_sources)
+        --    self._special_active_fx_source_name = melee_idling_fx_source_name
+        --end)
+
+        -- removing every special loop sound?
+        --  didn't even work >:(
+        --PlayerCharacterLoopingSoundEventAliases.weapon_special_loop.start.event_alias = "stop_weapon_special_loop"
+        -- PlayerCharacterLoopingSoundEventAliases.weapon_special_loop.start.event_alias = nil
+
         -- Just prevent the vfx from working in the first place
-        --  nope lol
+        --  nope lol that just crashes
+        --  also that wouldn've removed the sparks
         --mod:hook_origin(ChainWeaponEffects, "_start_vfx_loop", function (self)
         --    return
         --end)
