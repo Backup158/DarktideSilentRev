@@ -40,7 +40,7 @@ local function generateLocalizationsForSubwidgetOptions(setting_id, localized_na
     localizations[setting_id.."_option_3"] = {en = "Random Custom Audio"}
 end
 generateLocalizationsForSubwidgetOptions("disable_rev_up", "Rev up (Special Action activation)")
-generateLocalizationsForSubwidgetOptions("disable_rev_idle", "Rev idle [NOT WORKING]")
+generateLocalizationsForSubwidgetOptions("disable_rev_idle", "[NOT WORKING!!!] Rev idle")
 generateLocalizationsForSubwidgetOptions("disable_rev_down", "Rev down (Special Action deactivation)")
 
 

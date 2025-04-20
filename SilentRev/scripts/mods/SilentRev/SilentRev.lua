@@ -44,6 +44,15 @@ local function replace_sounds(settings_changed)
     end
 
     -- Rev up VRRRRRRRRRRRRRR
+    --  Reset
+    if option_disable_rev_up == "not_disabled" or settings_changed then
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_2h_p1_m1"] = "wwise/events/weapon/play_2h_chainsword_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_2h_p1_m2"] = "wwise/events/weapon/play_2h_chainsword_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m1"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
+        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m2"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
+    end
     --  Silenced
     if option_disable_rev_up == "silenced" then
         -- Table of chain weapons to iterate through
@@ -59,42 +68,33 @@ local function replace_sounds(settings_changed)
         for _, weapon_name in ipairs(chain_weapons) do
             PlayerCharacterSoundEventAliases.sfx_weapon_up.events[weapon_name] = "wwise/events/weapon/play_weapon_silence" 
         end
-    --  If not disabled and settings just got changed, put them back
-    elseif settings_changed then
-        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_special_start"
-        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_special_start"
-        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_2h_p1_m1"] = "wwise/events/weapon/play_2h_chainsword_special_start"
-        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_2h_p1_m2"] = "wwise/events/weapon/play_2h_chainsword_special_start"
-        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m1"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
-        PlayerCharacterSoundEventAliases.sfx_weapon_up.events["chainsword_p1_m2"] = "wwise/events/weapon/play_combat_weapon_chainsword_special_start"
-    end
-    if option_disable_rev_up == "audio_plugin" then
-        -- do audio plugin shit
-        Audio.hook_sound("play_chainaxe_special_start", function()
-            Audio.play_file(audio_files:random("revup"), { audio_type = "sfx" })
-            return false
-        end)
-        Audio.hook_sound("play_2h_chainsword_special_start", function()
-            Audio.play_file(audio_files:random("revup"), { audio_type = "sfx" })
-            return false
-        end)
-        Audio.hook_sound("play_combat_weapon_chainsword_special_start", function()
+    elseif option_disable_rev_up == "audio_plugin" then
+        if not use_audio then
+            mod:error("Audio plugin is required for this setting! (Rev up)")
+            return
+        end
+        
+        Audio.hook_sound("play_*_special_start", function()
             Audio.play_file(audio_files:random("revup"), { audio_type = "sfx" })
             return false
         end)
     end
 
     -- Unrev purr
+    --  Reset sound
+    if settings_changed or option_disable_rev_down == "not_disabled" then
+        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_rev"
+        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_rev"
+    end
     if option_disable_rev_down == "silenced" then 
         -- Replacing sound with silence
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_weapon_silence" 
         PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_weapon_silence"
-    --  If not silenced and settings just got changed, put them back
-    elseif settings_changed then
-        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m1"] = "wwise/events/weapon/play_chainaxe_rev"
-        PlayerCharacterSoundEventAliases.weapon_special_end.events["chainaxe_p1_m2"] = "wwise/events/weapon/play_chainaxe_rev"
-    end
-    if option_disable_rev_down == "audio_plugin" then
+    elseif option_disable_rev_down == "audio_plugin" then
+        if not use_audio then
+            mod:error("Audio plugin is required for this setting! (Rev down)")
+            return
+        end
         Audio.hook_sound("play_chainaxe_rev", function()
             Audio.play_file(audio_files:random("revdown"), { audio_type = "sfx" })
             return false
@@ -104,27 +104,33 @@ local function replace_sounds(settings_changed)
     -- Idle purr
     --  Why does this require the Audio plugin?
     --  The idle sound is also in PlayerCharacterSoundEventAliases, but in the looping_events table. The events table is the one that is returned, so that's the only one we can access.
-    --  
-    if use_audio and option_disable_rev_idle == "silenced" then
+    --  nvm that doesnt work either >:(
+    -- 
+    if not option_disable_rev_idle == "not_disabled" and not use_audio then
+        mod:echo("Audio plugin is required for this setting! (Rev idle)")
+        return
+    end
+    if option_disable_rev_idle == "silenced" then
+        -- Swapping the active souns with the idle sounds
+        --  Unfortunately, this includes swing sounds and idle does not include that, so game explodes
         --mod:hook_safe(ChainWeaponEffects, "init", function (self, context, slot, weapon_template, fx_sources)
         --    -- Replacing active sound with regular idle sound
         --    local special_active_fx_source_name = fx_sources._melee_idling
         --    self._special_active_fx_source_name = melee_idling_fx_source_name
         --end)
-        --mod:hook_safe(ChainWeaponEffects, "_start_vfx_loop", function (self)
+        -- Just prevent the vfx from working in the first place
+        --mod:hook_origin(ChainWeaponEffects, "_start_vfx_loop", function (self)
         --    return
         --end)
         --PlayerCharacterSoundEventAliases.looping_events.equipped_item_passive.events["chainaxe_p1_m1"] = "wwise/events/weapon/%s_weapon_silence" 
         -- "wwise/events/weapon/%s_chainaxe",
-        Audio.hook_sound("wwise/events/weapon/%s_chainaxe", function()
-            return false
-        end)
-        Audio.hook_sound("wwise/events/weapon/%s_2h_chainsword", function()
-            return false
-        end)
-        Audio.hook_sound("wwise/events/weapon/%s_2h_chainsword", function()
-            return false
-        end)
+        Audio.silence_sounds(
+            {
+                "wwise/events/weapon/%s_chainaxe", 
+                "wwise/events/weapon/%s_2h_chainsword",
+                "wwise/events/weapon/%s_combat_weapon_chainsword",
+            } 
+        )
         --Audio.hook_sound("play_weapon_silence", function()
         --    return false
         --end)
@@ -134,10 +140,20 @@ local function replace_sounds(settings_changed)
         --Audio.hook_sound("combat_chainsword_cut", function()
         --    return false
         --end)
-    elseif option_disable_rev_idle == "not_disabled" and settings_changed then
-        -- diasble shit
     elseif option_disable_rev_idle == "audio_plugin" then
         -- do audio plugin shit
+        Audio.hook_sound("wwise/events/weapon/%s_chainaxe", function()
+            Audio.play_file(audio_files:random("revidle"), { audio_type = "sfx" })
+            return false
+        end)
+        Audio.hook_sound("wwise/events/weapon/%s_2h_chainsword", function()
+            Audio.play_file(audio_files:random("revidle"), { audio_type = "sfx" })
+            return false
+        end)
+        Audio.hook_sound("wwise/events/weapon/%s_combat_weapon_chainsword", function()
+            Audio.play_file(audio_files:random("revidle"), { audio_type = "sfx" })
+            return false
+        end)
     end
 
 end
