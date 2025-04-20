@@ -17,18 +17,18 @@ for _, name in pairs(widgetsToggleableToAdd) do
     addWidget(name)
 end
 
--- creates group with empty subwidgets
-local index_for_disable_group = #finalWidgets+1
+-- Creates group with empty subwidgets
+local index_for_disable_group = #finalWidgets+1 -- storing this value here because the size will change once I add the group widget
 finalWidgets[index_for_disable_group] = {
     setting_id = "disable_sounds",
     type = "group",
     sub_widgets = {},
 }
--- fill up the subwidgets
+--  Fill up that group with subwidgets
 local subwidgetsToggleableToAdd = {"disable_rev_up", "disable_rev_idle", "disable_rev_down" }
 for _, name in pairs(subwidgetsToggleableToAdd) do
     local disable_sounds_group_subwidgets = finalWidgets[index_for_disable_group]["sub_widgets"]
-    disable_sounds_group_subwidgets[#disable_sounds_group_subwidgets+1] = {
+    disable_sounds_group_subwidgets[#disable_sounds_group_subwidgets + 1] = {
         setting_id = name,
         type = "dropdown",
         default_value = "silenced",
