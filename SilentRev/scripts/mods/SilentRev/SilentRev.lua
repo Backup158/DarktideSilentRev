@@ -109,10 +109,11 @@ local function replace_sounds(settings_changed)
     --  The idle sound is also in PlayerCharacterSoundEventAliases, but in the looping_events table. The events table is the one that is returned, so that's the only one we can access.
     --  nvm that doesnt work either >:(
     -- 
-    if not option_disable_rev_idle == "not_disabled" and not use_audio then
-        mod:echo("Audio plugin is required for this setting! (Rev idle)")
-        return
-    end
+    --if not option_disable_rev_idle == "not_disabled" and not use_audio then
+    --if option_disable_rev_idle == "audio_plugin" and not use_audio then
+    --    mod:echo("Audio plugin is required for this setting! (Rev idle)")
+    --    return
+    --end
     if option_disable_rev_idle == "silenced" then
         -- Swapping the active souns with the idle sounds
         --  Unfortunately, this includes swing sounds and idle does not include that, so game explodes
@@ -141,6 +142,22 @@ local function replace_sounds(settings_changed)
         -- this table is immutable through currently known methods
         --PlayerCharacterSoundEventAliases.looping_events.equipped_item_passive.events["chainaxe_p1_m1"] = "wwise/events/weapon/%s_weapon_silence" 
 
+        -- scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects.lua
+        -- _update_intensity gets max intensity --> speed_settings.max_intensity --> self._chain_speed_template --> weapon_template.chain_speed_template --> scripts/settings/equipment/weapon_templates/chain_axes/chainaxe_p1_m1.lua --> scripts/settings/equipment/chain_speed_templates.lua
+        -- Cannot be affected. I think it's because chain_speed_template includes time to max ram, which affects weapon performance in game, so I can't edit it
+        --mod:hook_safe(ChainWeaponEffects, "_update_intensity", function (self, dt, t)
+        --    --local first_person_unit = nil
+        --    local max_intensity = {
+        --        activated = 0.1,
+        --        activated_sawing = 0.1,
+        --        idle = 0.1,
+        --        sawing = 0.1,
+        --    }
+        --    local base_intensity = 0
+        --    --local time_until_max_throttle = 0.01
+        --    --local time_until_min_throttle = 0.1
+        --end)
+
         --Audio.silence_sounds({
         --    "wwise/events/weapon/%s_chainaxe", 
         --    "wwise/events/weapon/%s_2h_chainsword",
@@ -156,7 +173,8 @@ local function replace_sounds(settings_changed)
         --Audio.hook_sound("combat_chainsword_cut", function()
         --    return false
         --end)
-    elseif option_disable_rev_idle == "audio_plugin" then
+    elseif use_audio and option_disable_rev_idle == "audio_plugin" then
+    --  elseif option_disable_rev_idle == "audio_plugin" then
         -- do audio plugin shit
         -- wont regex chain because there's psyker chain lightning
         Audio.hook_sound("wwise/events/weapon/%s_chainaxe", function()
