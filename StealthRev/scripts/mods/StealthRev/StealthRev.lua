@@ -80,11 +80,14 @@ mod.on_setting_changed = function(setting_id)
         mod:error(mod:Localize("error_toggle_chain"))
     -- If it's a weapon getting changed, unmute or remute
     elseif string_regex_match(setting_id, "_p%d_m%d") then
+        --mod:echo("changing wepaon option: "..setting_id)
         -- Unmuting
         if not mod:get(setting_id) then
+            --mod:echo("restoring: ".. tostring(original_pcsea.sfx_weapon_up.events[setting_id]))
             PlayerCharacterSoundEventAliases.sfx_weapon_up.events[setting_id] = original_pcsea.sfx_weapon_up.events[setting_id]
         -- Remuting
         else
+            --mod:echo("remuting")
             PlayerCharacterSoundEventAliases.sfx_weapon_up.events[setting_id] = "wwise/events/weapon/play_weapon_silence"
         end
     end
