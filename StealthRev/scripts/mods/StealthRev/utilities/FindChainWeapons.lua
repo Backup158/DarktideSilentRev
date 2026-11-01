@@ -26,8 +26,8 @@ if PlayerCharacterSoundEventAliases and PlayerCharacterSoundEventAliases.sfx_wea
     -- Looks for each individual chain weapon that revs up.
     for weapon_id, _ in pairs(PlayerCharacterSoundEventAliases.sfx_weapon_up.events) do
         if string_match(weapon_id, "chain") then
-            chain_weapon_names[actual_amount_of_chain_weapons] = weapon_id
             actual_amount_of_chain_weapons = actual_amount_of_chain_weapons + 1
+            chain_weapon_names[actual_amount_of_chain_weapons] = weapon_id
         end
     end
 end
