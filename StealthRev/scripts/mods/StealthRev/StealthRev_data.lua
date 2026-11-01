@@ -1,42 +1,16 @@
 local mod = get_mod("StealthRev")
 
-local finalWidgets = {}
+local chain_weapon_names = mod.chain_weapon_names
+local amount_of_chain_weapons = #chain_weapon_names
 
--- Appends a toggleable option for a new widget
-local function addWidget(name)
-    -- Write at (table size) + 1, ie inserting at the tail
-    finalWidgets[#finalWidgets + 1] = {
-        setting_id = name,
+local sub_widgets_per_chain_weapon_startup = Script.new_map( amount_of_chain_weapons )
+
+-- Adds a widget to disable each startup rev sound
+for i = 1, amount_of_chain_weapons do
+    sub_widgets_per_chain_weapon_startup[i] = {
+        setting_id = chain_weapon_names[i],
         type = "checkbox",
-        default_value = false,
-    }
-end
-
-local widgetsToggleableToAdd = {"enable_debug_mode", "use_audio"}
-for _, name in pairs(widgetsToggleableToAdd) do
-    addWidget(name)
-end
-
--- Creates group with empty subwidgets
-local index_for_disable_group = #finalWidgets+1 -- storing this value here because the size will change once I add the group widget
-finalWidgets[index_for_disable_group] = {
-    setting_id = "disable_sounds",
-    type = "group",
-    sub_widgets = {},
-}
---  Fill up that group with subwidgets
-local subwidgetsToggleableToAdd = {"disable_rev_up", "disable_rev_idle", "disable_rev_down" }
-for _, name in pairs(subwidgetsToggleableToAdd) do
-    local disable_sounds_group_subwidgets = finalWidgets[index_for_disable_group]["sub_widgets"]
-    disable_sounds_group_subwidgets[#disable_sounds_group_subwidgets + 1] = {
-        setting_id = name,
-        type = "dropdown",
-        default_value = "silenced",
-        options = {
-            {text = name.."_option_1", value = "not_disabled"},
-            {text = name.."_option_2", value = "silenced"},
-            {text = name.."_option_3", value = "audio_plugin"},
-        },
+        default_value = true,
     }
 end
 
@@ -45,6 +19,22 @@ return {
     description = mod:localize("mod_description"),
     is_togglable = true,
     options = {
-		widgets = finalWidgets
+		widgets = {
+            {
+                setting_id = "enable_debug_mode",
+                type = "checkbox",
+                default_value = false,
+            },
+            {
+                setting_id = "silence_pcsea_events",
+                type = "group",
+                sub_widgets = sub_widgets_per_chain_weapon_startup,
+            },
+            {
+                setting_id = "silence_chain_weapon_effects",
+                type = "checkbox",
+                default_value = true,
+            },
+        }
 	}
 }

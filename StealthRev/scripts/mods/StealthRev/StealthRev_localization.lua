@@ -1,9 +1,18 @@
-localizations = {
+local mod = get_mod("StealthRev")
+
+local string = string
+local string_regex_sub = string.gsub
+
+mod:io_dofile("StealthRev/scripts/mods/StealthRev/utilities/FindChainWeapons")
+local chain_weapon_names = mod.chain_weapon_names
+local amount_of_chain_weapons = #chain_weapon_names
+
+local localizations = {
     mod_name = {
-        en = "Silent Revving for Chain Weapons",
+        en = "Stealth Rev - Stealthily Operating Saws (SOS)",
     },
     mod_description = {
-        en = "Removes the sound for revving up a chain weapon",
+        en = "Reduces sound from activating the special action for chain weapons.",
     },
     -- Settings
     enable_debug_mode = {
@@ -12,36 +21,36 @@ localizations = {
     enable_debug_mode_description = {
         en = "Verbose printing for function execution",
     },
-    use_audio = {
-        en = "Use Audio Plugin",
+    silence_pcsea_events = {
+        en = "Silencing Each Inital Startup",
     },
-    use_audio_description = {
-        en = "Enables usage of custom sound effects",
+    silence_chain_weapon_effects = {
+        en = "Silencing the Chain Speedup",
     },
-    disable_sounds = {
-        en = "Sounds to Disable",
+    error_toggle_chain = {
+        en = "Silencing the Chain Speedup cannot be toggled mid-game! You must restart the game for this change to take effect.",
     },
 }
 
 -- -------------
--- Generate Localizations for Subwidget Options
+-- Generate Localizations for Individual weapon
 -- -------------
 -- Parameter(s):
 --      string: setting_id
---      string: localized name (English)
--- Description: Writes options in the localizations table for each sound that can be disabled, along with its 3 options
+-- Description: Writes options in the localizations table for each weapon that can be disabled, using its real weapon localization
 -- Return: N/A
 -- -------------
-local function generateLocalizationsForSubwidgetOptions(setting_id, localized_name) 
-    localizations[setting_id] = {en = localized_name}
-    localizations[setting_id.."_option_1"] = {en = "Not Disabled"}
-    -- Add translations like this!                          ----v
-    localizations[setting_id.."_option_2"] = {en = "Silenced", ru = "Глубокая глотка"} 
-    localizations[setting_id.."_option_3"] = {en = "Random Custom Audio"}
+local function generate_localization_for_individual_weapon(setting_id) 
+    -- Fall back to mark 1, then fall back to nothing
+    local weapon_pattern = Localize("loc_weapon_pattern_"..setting_id) or Localize("loc_weapon_pattern_"..string_regex_sub(setting_id, "_m%", "_m1")) or ""
+	local weapon_mark = Localize("loc_weapon_mark_"..setting_id) or Localize("loc_weapon_mark_"..string_regex_sub(setting_id, "_m%", "_m1")) or ""
+	local weapon_family = Localize("loc_weapon_family_"..setting_id) or Localize("loc_weapon_family_"..string_regex_sub(setting_id, "_m%", "_m1")) or ""
+    localizations[setting_id] = { en = weapon_pattern.." "..weapon_mark.." "..weapon_family }
 end
-generateLocalizationsForSubwidgetOptions("disable_rev_up", "Rev up (Special Action activation)")
-generateLocalizationsForSubwidgetOptions("disable_rev_idle", "[NOT WORKING!!!] Rev idle")
-generateLocalizationsForSubwidgetOptions("disable_rev_down", "Rev down (Special Action deactivation)")
+
+for i = 1, #chain_weapon_names do
+    generate_localization_for_individual_weapon(chain_weapon_names[i])
+end
 
 
 return localizations
