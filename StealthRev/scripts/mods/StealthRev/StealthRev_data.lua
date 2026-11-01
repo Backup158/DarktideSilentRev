@@ -10,7 +10,7 @@ for i = 1, amount_of_chain_weapons do
     sub_widgets_per_chain_weapon_startup[i] = {
         setting_id = chain_weapon_names[i],
         type = "checkbox",
-        default_value = true,
+        default_value = false,
     }
 end
 

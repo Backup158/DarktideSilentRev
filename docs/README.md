@@ -8,7 +8,7 @@ Revving up a chain weapon has two parts: the quick *VRR* on start, and the follo
 - Quiet rev: Leave the initial startup on, disable the chain speedup
 - Fully silent: Disable both sounds
 
-Most of the sound is from the chain speedup, so just disabling the initial startup won't change much.
+Most of the sound is from the chain speedup, so just disabling the initial startup won't change much. By default, I have it set up for Quiet rev.
 
 ## Silencing the Initial Startup
 This is part of the general player sound files. These can be silenced or reenabled per weapon.
