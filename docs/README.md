@@ -1,3 +1,4 @@
+![Thumbnail meme](./assets/images/SilentRev_Thumbnail.png)
 
 # Description
 Reduces sound from activating the special action for chain weapons.
@@ -19,3 +20,5 @@ Also, if you use [Silence Obnoxious Sounds](https://www.nexusmods.com/warhammer4
 This is done by editing how the game handles chain weapon events in general. This means it's all or nothing. 
 
 On the technical side, this basically nukes `ChainWeaponEffects._update_intensity`, so there may be incompatibility issues with mods that try to edit the same thing. I don't know of any such mods, but it's a possibility that a mod that relies on that function will break when used with this mod.
+
+![Footer meme which is actually the header image on Nexus](./assets/images/SilentRev_Header.png)
