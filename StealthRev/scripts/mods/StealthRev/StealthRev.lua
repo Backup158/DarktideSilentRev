@@ -68,6 +68,7 @@ end)
 if mod:get("silence_chain_weapon_effects") then
     mod:hook_origin(ChainWeaponEffects, "_update_intensity", function(func, self, dt, t, ...)
         -- mod:echo("Chain updating intensity. But i killed them all. The dogs shall die.")
+        -- TODO: Figure out this fuckload of math so I can make this more modular. Perhaps even just reducing the sound? Or even making it louder lol.
     end)
 end
 
