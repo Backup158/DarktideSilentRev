@@ -6,8 +6,11 @@ local mod = get_mod("StealthRev")
 -- ################
 -- Performance
 -- ################
+local table = table
+local table_clone = table.clone
 local string = string
 local string_regex_match = string.gmatch
+
 -- ################
 -- Requirements
 -- ################
@@ -18,7 +21,7 @@ local PlayerCharacterSoundEventAliases = require("scripts/settings/sound/player_
 -- Mod Data
 -- ################
 -- Before changing anything, copy the original table
-local original_pcsea = table.clone(PlayerCharacterSoundEventAliases)
+local original_pcsea = table_clone(PlayerCharacterSoundEventAliases)
 
 -- #################################
 -- Execution
