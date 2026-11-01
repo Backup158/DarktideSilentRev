@@ -1,4 +1,4 @@
-local mod = get_mod("SilentRev")
+local mod = get_mod("StealthRev")
 
 local finalWidgets = {}
 
